@@ -9,6 +9,7 @@
 #include <QBrush>
 #include <QMap>
 #include "setdialog.h"
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 class QDragEnterEvent;
