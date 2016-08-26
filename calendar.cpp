@@ -4,13 +4,16 @@
 #include <QTextCharFormat>
 #include <QDebug>
 #include <QtGlobal>
+#include <QDropEvent>
+#include <QMouseEvent>
+#include <QApplication>
 #include "draglabel.h"
 
 
 calendar::calendar()
 {
-    m_outlinePen.setColor(Qt::red);
     setAcceptDrops(true);
+    qDebug() << ( Q_DECLARE_PRIVATE(QCalendarWidget) ) <<endl;
 }
 
 calendar::~calendar()
@@ -18,6 +21,39 @@ calendar::~calendar()
 
 }
 
+void calendar::dragEnterEvent(QDragEnterEvent *event)
+{
+     event->acceptProposedAction();
+     installEventFilter(this);
+}
+
+bool calendar::eventFilter(QObject* obj,QEvent* ev)
+{
+    if(obj==this && ev->type() == QEvent::MouseButtonPress)
+        qDebug() << (static_cast<QMouseEvent*>(ev) ->button() == Qt::LeftButton ? "pL" : "pR") <<endl;
+    else
+        if(obj==this && ev->type() == QEvent::MouseButtonRelease)
+        	qDebug() << (static_cast<QMouseEvent*>(ev) ->button() == Qt::LeftButton ? "rL" : "rR") <<endl;
+        else
+        	qDebug()<<"other event[]"<< ev->type() <<endl;
+
+    return false;
+}
+
+void calendar::dropEvent(QDropEvent *event)
+{
+    qDebug()<<"drop"<<endl;
+    qDebug()<<event->pos().x()<<" , "<<event->pos().y()<<endl;
+    QMouseEvent *my_click1 = new QMouseEvent( QEvent::MouseButtonPress , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
+    QMouseEvent *my_click2 = new QMouseEvent( QEvent::MouseButtonRelease , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
+    
+    QApplication::postEvent(QWidget::focusWidget(),my_click1);
+    QApplication::postEvent(QWidget::focusWidget(),my_click2);
+    
+    qDebug() << (QWidget::focusWidget() == this) <<endl;
+
+    event->acceptProposedAction();
+}
 
 void calendar::addNote( const QDate &date )
 {
@@ -31,15 +67,6 @@ void calendar::addNote( const QDate &date )
     setwindow->exec();
 }
 
-void calendar::setColor(QColor& color)
-{
-   m_outlinePen.setColor(color);
-}
-
-QColor calendar::getColor()
-{
-   return (m_outlinePen.color());
-}
 
 void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
 {
@@ -54,10 +81,6 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
     bool something = (all.length()>0); 
 	if(daily.length() && !i_d[date])
        all+=QString("\n")+daily;
-
-
-//    connect(setwindow,SIGNAL(repaint_the_calendar()),setwindow,SLOT(hide()));
-//    connect(setwindow,SIGNAL(repaint_the_calendar()),setwindow,SLOT(show()));
 
     if(something || cell_color[date])
     {
@@ -75,10 +98,10 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
     else
         painter->setBrush(Qt::transparent);
 
-        if(something)
-            painter->setPen(QPen(Qt::red,2));
-        else
-            painter->setPen(QPen(Qt::black,0.7));
+    if(something)
+        painter->setPen(QPen(Qt::red,2));
+    else
+        painter->setPen(QPen(Qt::black,0.7));
 
 	painter->drawRect(rect.adjusted(0, 0, -1, -1));	  
 	painter->setPen(Qt::blue);
