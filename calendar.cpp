@@ -56,6 +56,9 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
        all+=QString("\n")+daily;
 
 
+//    connect(setwindow,SIGNAL(repaint_the_calendar()),setwindow,SLOT(hide()));
+//    connect(setwindow,SIGNAL(repaint_the_calendar()),setwindow,SLOT(show()));
+
     if(something || cell_color[date])
     {
 
@@ -67,15 +70,17 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
 
         brushcolor.setAlpha(100);
 
-        if(something)
-            painter->setPen(m_outlinePen);
-        else
-            painter->setPen(brushcolor);
-
         painter->setBrush(brushcolor);
-	    painter->drawRect(rect.adjusted(0, 0, -1, -1));
     }
-	  
+    else
+        painter->setBrush(Qt::transparent);
+
+        if(something)
+            painter->setPen(QPen(Qt::red,2));
+        else
+            painter->setPen(QPen(Qt::black,0.7));
+
+	painter->drawRect(rect.adjusted(0, 0, -1, -1));	  
 	painter->setPen(Qt::blue);
 	painter->drawText(rect,Qt::TextWordWrap,all);
 
