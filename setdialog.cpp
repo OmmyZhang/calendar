@@ -1,27 +1,34 @@
 #include "setdialog.h"
 #include <QLayout>
 #include <QDebug>
+#include <QColorDialog>
+#include <QIcon>
 
-SetDialog::SetDialog(QString& once,QString& monthly,QString& weekly,QString& daily)
+SetDialog::SetDialog(QString& once,QString& monthly,QString& weekly,QString& daily,bool& i_m,bool& i_w,bool& i_d,QColor*& _cc):cc(_cc)
 {
     setWindowTitle(tr("Edit reminders"));
 
-    m_once    = new EditReminder(tr("Once:    "),once);
+    bool useless=0;
+    m_once    = new EditReminder(tr("Once:    "),once,0,useless);
     if(!once.length()) m_once->hide();
     
-    m_monthly = new EditReminder(tr("Monthly:"),monthly);
+    m_monthly = new EditReminder(tr("Monthly:"),monthly,1,i_m);
     if(!monthly.length()) m_monthly->hide();
     
-    m_weekly = new EditReminder(tr("Weekly:"),weekly);
+    m_weekly = new EditReminder(tr("Weekly:"),weekly,1,i_w);
     if(!weekly.length()) m_weekly->hide();
     
-    m_daily = new EditReminder(tr("Daily: "),daily);
+    m_daily = new EditReminder(tr("Daily: "),daily,1,i_d);
     if(!daily.length()) m_daily->hide();
 
     connect(m_once->b_save,SIGNAL(clicked()),this,SLOT(any_change()));
     connect(m_monthly->b_save,SIGNAL(clicked()),this,SLOT(any_change()));
     connect(m_weekly->b_save,SIGNAL(clicked()),this,SLOT(any_change()));
     connect(m_daily->b_save,SIGNAL(clicked()),this,SLOT(any_change()));
+    
+    connect(m_monthly->c_ignore,SIGNAL(stateChanged(int)),this,SLOT(any_change()));
+    connect(m_weekly->c_ignore,SIGNAL(stateChanged(int)),this,SLOT(any_change()));
+    connect(m_daily->c_ignore,SIGNAL(stateChanged(int)),this,SLOT(any_change()));
     
     QVBoxLayout *Layout = new QVBoxLayout;
     Layout->addWidget(m_once);
@@ -41,7 +48,7 @@ SetDialog::SetDialog(QString& once,QString& monthly,QString& weekly,QString& dai
     combo->addItem(tr("Weekly"),QVariant::fromValue((QObject*)m_weekly));
     combo->addItem(tr("Daily"),QVariant::fromValue((QObject*)m_daily));
 
-    AddReminderLayout ->addWidget(new QLabel(tr("New:  ")));
+    AddReminderLayout ->addWidget(new QLabel(tr("New reminder:  ")));
     AddReminderLayout ->addWidget(new_r);
     AddReminderLayout ->addWidget(combo);
     AddReminderLayout ->addWidget(new_add);
@@ -49,7 +56,26 @@ SetDialog::SetDialog(QString& once,QString& monthly,QString& weekly,QString& dai
     connect(new_add,SIGNAL(clicked()),this,SLOT(add()));
 
     Layout->addLayout(AddReminderLayout);
+
+    c_c = new QPushButton(QIcon("icon.png"),"");
+    c_c->setFixedSize(25,25);
+    c_c->setIconSize(QSize(25,25));
+    c_c->setFocusPolicy(Qt::NoFocus);
+    c_c->setFlat(true);
+    connect(c_c,SIGNAL(clicked()),this,SLOT(chooseColor()));
+
+    Layout->addWidget(c_c);
+
     setLayout(Layout);
+    
+}
+
+void SetDialog::chooseColor()
+{
+    if(!cc)
+        cc = new QColor;
+    *cc = QColorDialog::getColor(Qt::yellow,0,tr("choose the color of this cell"));
+    emit repaint_the_calendar();
 
 }
 
@@ -77,5 +103,6 @@ void SetDialog::add()
 
 void SetDialog::any_change()
 {
+    qDebug()<<"repaint"<<endl;
     emit repaint_the_calendar();
 }

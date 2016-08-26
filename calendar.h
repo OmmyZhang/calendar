@@ -34,11 +34,13 @@ private slots:
 private:
     QDate m_currentDate;
     QPen m_outlinePen;
-    QBrush m_transparentBrush;
 
     QMap<QDate , QString> once_todo;
-    QString weekly_todo[7];
-    QString monthly_todo[31];
+    QMap<QDate , bool> i_m,i_w,i_d;
+    QMap<QDate , QColor*> cell_color;
+        
+    QString weekly_todo[8];
+    QString monthly_todo[32];
     QString daily;
 
     SetDialog *setwindow;
