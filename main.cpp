@@ -1,6 +1,6 @@
 #include <QApplication>
 #include "calendar.h"
-//#include "calendarwindow.h"
+#include "calendarwindow.h"
 #include <QDesktopWidget>
 
 int main(int argc, char *argv[])
@@ -9,13 +9,12 @@ int main(int argc, char *argv[])
     QDesktopWidget* desktopWidget = QApplication::desktop();
     QRect screenRect = desktopWidget->screenGeometry();
 
-    calendar* cale = new calendar();
-    cale->resize(QSize(screenRect.width()*2/3, screenRect.height()*2/3));
-    cale->setFirstDayOfWeek(Qt::Monday);
-    cale->setWindowOpacity(0.8);
-    cale->show();
+    CalendarWindow* calew = new CalendarWindow();
+    calew->resize(QSize(screenRect.width()*2/3, screenRect.height()*2/3));
+    
+    calew->setWindowOpacity(0.8);
+    calew->show();
 
-    QObject::connect(cale,SIGNAL(activated(const QDate &)),cale,SLOT(addNote(const QDate &)));
 
     return a.exec();
 }

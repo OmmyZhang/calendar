@@ -10,10 +10,13 @@
 #include "draglabel.h"
 
 
-calendar::calendar()
+calendar::calendar() 
 {
+    head = new int(0);
+    recent_d = new QDate[REPEAT];
+    recent_r = new QRect[REPEAT];
+
     setAcceptDrops(true);
-    qDebug() << ( Q_DECLARE_PRIVATE(QCalendarWidget) ) <<endl;
 }
 
 calendar::~calendar()
@@ -27,32 +30,30 @@ void calendar::dragEnterEvent(QDragEnterEvent *event)
      installEventFilter(this);
 }
 
-bool calendar::eventFilter(QObject* obj,QEvent* ev)
-{
-    if(obj==this && ev->type() == QEvent::MouseButtonPress)
-        qDebug() << (static_cast<QMouseEvent*>(ev) ->button() == Qt::LeftButton ? "pL" : "pR") <<endl;
-    else
-        if(obj==this && ev->type() == QEvent::MouseButtonRelease)
-        	qDebug() << (static_cast<QMouseEvent*>(ev) ->button() == Qt::LeftButton ? "rL" : "rR") <<endl;
-        else
-        	qDebug()<<"other event[]"<< ev->type() <<endl;
-
-    return false;
-}
-
 void calendar::dropEvent(QDropEvent *event)
 {
     qDebug()<<"drop"<<endl;
-    qDebug()<<event->pos().x()<<" , "<<event->pos().y()<<endl;
-    QMouseEvent *my_click1 = new QMouseEvent( QEvent::MouseButtonPress , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
-    QMouseEvent *my_click2 = new QMouseEvent( QEvent::MouseButtonRelease , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
-    
-    QApplication::postEvent(QWidget::focusWidget(),my_click1);
-    QApplication::postEvent(QWidget::focusWidget(),my_click2);
-    
-    qDebug() << (QWidget::focusWidget() == this) <<endl;
+    qDebug()<<event->pos().x()<<" , "<<event ->pos().y()<<endl;
+
+    QDate choose = find(event ->pos());
+    qDebug()<< choose <<endl;
+    if(choose.isNull())
+        return ;
+
+   // addNote(choose);
 
     event->acceptProposedAction();
+}
+
+QDate calendar::find(QPoint p)
+{
+    for(int i=0;i<REPEAT;++i)
+        if(recent_r[i].contains(p,true))
+        {
+            qDebug()<<recent_r[i].bottom()<<" "<<recent_r[i].top()<<endl;
+            return recent_d[i];
+        }
+    return QDate();
 }
 
 void calendar::addNote( const QDate &date )
@@ -70,17 +71,25 @@ void calendar::addNote( const QDate &date )
 
 void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date) const
 {
-   //qDebug()<<"come in paintCell"<<endl;
-	QCalendarWidget::paintCell(painter, rect, date);
+    //qDebug()<<"come in paintCell "<<date.toString()<<rect.bottom()<<" "<<rect.top()<<endl;
+    
+    recent_d[*head] = date; 
+    recent_r[*head] = rect;
+    (*head) = ((*head)+1) % REPEAT;
+
+    QCalendarWidget::paintCell(painter, rect, date);
 	
 	QString all=once_todo[date];
+    QString _n = QString("\n");
+    if(all.length())
+        all+=_n;
 	if(monthly_todo[date.day()].length() && !i_m[date])
-		all+=QString("\n")+monthly_todo[date.day()];
+		all+=monthly_todo[date.day()]+_n;
     if(weekly_todo[date.dayOfWeek()].length() && !i_w[date])
-		all+=QString("\n")+weekly_todo[date.dayOfWeek()];
+		all+=weekly_todo[date.dayOfWeek()]+_n;
     bool something = (all.length()>0); 
 	if(daily.length() && !i_d[date])
-       all+=QString("\n")+daily;
+       all+=daily+_n;
 
     if(something || cell_color[date])
     {
