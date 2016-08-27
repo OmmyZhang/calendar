@@ -7,6 +7,7 @@
 #include <QDropEvent>
 #include <QMimeData>
 #include <QUrl>
+#include <QDir>
 #include <QMessageBox>
 #include "draglabel.h"
 
@@ -32,7 +33,8 @@ void calendar::mode_changed(bool _f_mode)
 }
 void calendar::dragEnterEvent(QDragEnterEvent *event)
 {
-     event->acceptProposedAction();
+    if(event->mimeData()->hasUrls())
+        event->acceptProposedAction();
 }
 
 void calendar::dropEvent(QDropEvent *event)
@@ -43,7 +45,10 @@ void calendar::dropEvent(QDropEvent *event)
     QDate choose = find(event ->pos());
     qDebug()<< choose <<endl;
     if(choose.isNull())
+    {
+        QMessageBox::warning(this,"Warring!",tr("please drop it in a cell"));
         return ;
+    }
 
     const QMimeData *mimeData = event->mimeData();
     if (mimeData->hasUrls()) 
@@ -56,6 +61,8 @@ void calendar::dropEvent(QDropEvent *event)
             qDebug() << url <<endl;
         }
     }
+    else
+        qDebug()<<"wrong"<<endl;
    // addNote(choose);
 
     event->acceptProposedAction();
@@ -64,11 +71,23 @@ void calendar::dropEvent(QDropEvent *event)
 void calendar::add_file(QString url,const QDate date)
 {
     qDebug() << url[0] <<endl;
-    if(QFile::copy( url , PATH+/*date.toString()+*/QString("/test") ) == false)
+    int p=url.length()-2;
+    while(url[p]!='/') --p;
+    QString file_name=url.right( url.length() - p );
+
+    QDir dir(PATH);
+    dir.mkdir(date.toString());
+    if(QDir(url).exists())
+        QMessageBox::warning(this,tr("Fail!"),tr("Copying a directory is not allowed."));
+    else
+    if(QFile::copy( url , PATH + date.toString() + file_name ) == false)
+        QMessageBox::warning(this,tr("Fail!"),tr("Copying Failed,please check if it is a local file or if it alrealdy exists."));
+    else
     {
-        QMessageBox::about(this,tr("File!"),tr("Copy Filed,please check if this file alrealdy exists."));
-        return ;
+        files[date].push_back(file_name);
+        interseting_repaint();
     }
+
 }
 
 QDate calendar::find(QPoint p)
@@ -120,10 +139,7 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
        all+=daily+_n;
 
     if(f_mode)
-    {
         something = false;
-        all=QString("FFF");
-    }
 
     if(something || cell_color[date])
     {
@@ -148,7 +164,22 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
 
 	painter->drawRect(rect.adjusted(0, 0, -1, -1));	  
 	painter->setPen(Qt::blue);
-	painter->drawText(rect,Qt::TextWordWrap,all);
+    
+    if(f_mode)
+    {
+        painter->setPen(Qt::black);
+        QFont font("宋体",7,-1,true);
+        painter->setFont(font);
+        all=QString("");
+        for(int i=0 ; i < files[date].size() ; ++i )
+            all+=files[date][i].right(files[date][i].length()-1)  +_n;
+        painter->drawText(rect,all);
+    }
+    else
+    {
+        painter->setPen(Qt::blue);
+	    painter->drawText(rect,Qt::TextWordWrap,all);
+    }
 
 }
 
