@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
     calew->resize(QSize(screenRect.width()*2/3, screenRect.height()*2/3));
     
     calew->setWindowOpacity(0.8);
+   
+    calew->mainbody->app = &a;
+    
     calew->show();
 
 

@@ -35,6 +35,13 @@ void calendar::dropEvent(QDropEvent *event)
     qDebug()<<"drop"<<endl;
     qDebug()<<event->pos().x()<<" , "<<event ->pos().y()<<endl;
 
+    QMouseEvent *e1 = new QMouseEvent( QEvent::MouseButtonPress , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
+    QMouseEvent *e2 = new QMouseEvent( QEvent::MouseButtonRelease , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
+    QMouseEvent *e3 = new QMouseEvent( QEvent::MouseButtonDblClick , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
+	QApplication::sendEvent(app,e1);
+	QApplication::sendEvent(app,e2);	
+	QApplication::sendEvent(app,e3);
+
     QDate choose = find(event ->pos());
     qDebug()<< choose <<endl;
     if(choose.isNull())
