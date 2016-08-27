@@ -24,7 +24,7 @@ CalendarWindow::CalendarWindow()
     ButtonsLayout ->addWidget(new QLabel(tr("File Mode")));
 
     QWidget *box = new QWidget;
-    box ->setFixedSize(240,35);
+    box ->setFixedSize(230,35);
     box->setLayout(ButtonsLayout);
 
     QVBoxLayout *Layout = new QVBoxLayout;

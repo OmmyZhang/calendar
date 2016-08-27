@@ -62,6 +62,11 @@ QDate calendar::find(QPoint p)
 void calendar::addNote( const QDate &date )
 {
     qDebug()<<"come in addNote"<<endl;
+    if(f_mode)
+    {
+
+        return ;
+    }
     setwindow = new SetDialog(once_todo[date],monthly_todo[date.day()],weekly_todo[date.dayOfWeek()],daily,
                                                 i_m[date] , i_w[date] , i_d[date],cell_color[date]);
     connect(setwindow,SIGNAL(repaint_the_calendar()),this,SLOT(interseting_repaint()));
@@ -74,7 +79,7 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
     //qDebug()<<"come in paintCell "<<date.toString()<<rect.bottom()<<" "<<rect.top()<<endl;
     
     recent_d[*head] = date; 
-    recent_r[*head] = rect;
+    recent_r[*head] = rect.translated(0,25);
     (*head) = ((*head)+1) % REPEAT;
 
     QCalendarWidget::paintCell(painter, rect, date);
