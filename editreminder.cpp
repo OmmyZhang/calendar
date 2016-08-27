@@ -10,7 +10,7 @@ EditReminder::EditReminder(QString _title,QString& _todo,bool repeat,bool& _igno
     el = new QLineEdit(todo);
     Layout->addWidget(el);
 
-    b_save = new QPushButton(tr("save"));
+    b_save = new QPushButton(tr("change"));
     b_reset = new QPushButton(tr("reset"));
     Layout->addWidget(b_save);
     Layout->addWidget(b_reset);

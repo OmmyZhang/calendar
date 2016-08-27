@@ -5,18 +5,16 @@
 #include <QDebug>
 #include <QtGlobal>
 #include <QDropEvent>
-#include <QMouseEvent>
-#include <QApplication>
 #include "draglabel.h"
 
 
-calendar::calendar() 
+calendar::calendar() : f_mode(false)
 {
     head = new int(0);
     recent_d = new QDate[REPEAT];
     recent_r = new QRect[REPEAT];
 
-    setAcceptDrops(true);
+    setAcceptDrops(f_mode);
 }
 
 calendar::~calendar()
@@ -24,23 +22,21 @@ calendar::~calendar()
 
 }
 
+void calendar::mode_changed(bool _f_mode)
+{
+    setAcceptDrops(f_mode=_f_mode);
+    interseting_repaint();
+
+}
 void calendar::dragEnterEvent(QDragEnterEvent *event)
 {
      event->acceptProposedAction();
-     installEventFilter(this);
 }
 
 void calendar::dropEvent(QDropEvent *event)
 {
     qDebug()<<"drop"<<endl;
     qDebug()<<event->pos().x()<<" , "<<event ->pos().y()<<endl;
-
-    QMouseEvent *e1 = new QMouseEvent( QEvent::MouseButtonPress , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
-    QMouseEvent *e2 = new QMouseEvent( QEvent::MouseButtonRelease , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
-    QMouseEvent *e3 = new QMouseEvent( QEvent::MouseButtonDblClick , event->pos() , Qt::LeftButton , Qt::LeftButton , 0);
-	QApplication::sendEvent(app,e1);
-	QApplication::sendEvent(app,e2);	
-	QApplication::sendEvent(app,e3);
 
     QDate choose = find(event ->pos());
     qDebug()<< choose <<endl;
@@ -68,10 +64,7 @@ void calendar::addNote( const QDate &date )
     qDebug()<<"come in addNote"<<endl;
     setwindow = new SetDialog(once_todo[date],monthly_todo[date.day()],weekly_todo[date.dayOfWeek()],daily,
                                                 i_m[date] , i_w[date] , i_d[date],cell_color[date]);
-
-    //无法靠update()或repaint()解决问题，只能先这样了
-    connect(setwindow,SIGNAL(repaint_the_calendar()),this,SLOT(hide()));
-    connect(setwindow,SIGNAL(repaint_the_calendar()),this,SLOT(show()));
+    connect(setwindow,SIGNAL(repaint_the_calendar()),this,SLOT(interseting_repaint()));
     setwindow->exec();
 }
 
@@ -97,6 +90,12 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
     bool something = (all.length()>0); 
 	if(daily.length() && !i_d[date])
        all+=daily+_n;
+
+    if(f_mode)
+    {
+        something = false;
+        all=QString("FFF");
+    }
 
     if(something || cell_color[date])
     {
@@ -125,7 +124,12 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
 
 }
 
-
+void calendar::interseting_repaint()
+{
+    //无法靠update()或repaint()解决问题，只能先这样了
+    hide();
+    show();
+}
 
 
 

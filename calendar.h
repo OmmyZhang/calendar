@@ -10,7 +10,6 @@
 #include <QMap>
 #include "setdialog.h"
 #include <cstdio>
-#include <QApplication>
 #define REPEAT 42
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +23,6 @@ class calendar: public QCalendarWidget
 public:
     calendar();
     ~calendar();
-    QApplication* app;
 
 protected:
     virtual void paintCell(QPainter * painter, const QRect & rect, const QDate & date) const;
@@ -32,12 +30,17 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event);
     void dropEvent(QDropEvent *event);
 
+public slots:
+    void mode_changed(bool f_mode);
+
 private slots:
     void addNote( const QDate & );
+    void interseting_repaint();
 
 private:
     QDate find(QPoint);
 
+    bool f_mode;
     QDate *recent_d;
     QRect *recent_r;
     int *head;
