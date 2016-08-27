@@ -9,7 +9,6 @@
 #include <QBrush>
 #include <QMap>
 #include "setdialog.h"
-#include <cstdio>
 #define REPEAT 42
 
 QT_BEGIN_NAMESPACE
@@ -42,17 +41,21 @@ private:
     QDate find(QPoint);
     void add_file(QString,const QDate);
 
+    void save();
+    void load();
+
     bool f_mode;
     QDate *recent_d;
     QRect *recent_r;
     int *head;
 
+    QMap<QDate , bool> visit;
     QMap<QDate , QString> once_todo;
     QMap<QDate , bool> i_m,i_w,i_d;
     QMap<QDate , QColor*> cell_color;
     QMap<QDate , QList<QString> > files;
-    QString weekly_todo[8];
     QString monthly_todo[32];
+    QString weekly_todo[8];
     QString daily;
 
     SetDialog *setwindow;
