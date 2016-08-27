@@ -41,11 +41,11 @@ void SwitchControl::paintEvent(QPaintEvent *event)
         if (m_bChecked) { // 打开状态
             background = m_checkedColor;
             thumbColor = m_checkedColor;
-            dOpacity = 0.600;
+            dOpacity = 0.500;
         } else { //关闭状态
             background = m_disabledColor;
             thumbColor = m_disabledColor;
-            dOpacity = 0.600;
+            dOpacity = 0.500;
         }
     } else {  // 不可用状态
         background = m_background;

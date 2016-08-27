@@ -49,6 +49,9 @@ SetDialog::SetDialog(QString& once,QString& monthly,QString& weekly,QString& dai
     combo->addItem(tr("Daily"),QVariant::fromValue((QObject*)m_daily));
 
     AddReminderLayout ->addWidget(new QLabel(tr("New reminder:  ")));
+    QLabel *add_p = new QLabel;
+    add_p ->setPixmap(QPixmap("pic/add2.png"));
+    AddReminderLayout ->addWidget(add_p);
     AddReminderLayout ->addWidget(new_r);
     AddReminderLayout ->addWidget(combo);
     AddReminderLayout ->addWidget(new_add);
@@ -57,9 +60,9 @@ SetDialog::SetDialog(QString& once,QString& monthly,QString& weekly,QString& dai
 
     Layout->addLayout(AddReminderLayout);
 
-    c_c = new QPushButton(QIcon("icon.png"),"");
+    c_c = new QPushButton(QIcon("pic/icon.png"),"");
     c_c->setFixedSize(25,25);
-    c_c->setIconSize(QSize(25,25));
+    c_c->setIconSize(QSize(24,24));
     c_c->setFocusPolicy(Qt::NoFocus);
     c_c->setFlat(true);
     connect(c_c,SIGNAL(clicked()),this,SLOT(chooseColor()));

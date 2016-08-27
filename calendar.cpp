@@ -5,10 +5,12 @@
 #include <QDebug>
 #include <QtGlobal>
 #include <QDropEvent>
+#include <QMimeData>
+#include <QUrl>
+#include <QMessageBox>
 #include "draglabel.h"
 
-
-calendar::calendar() : f_mode(false)
+calendar::calendar() : PATH("usr_data/"),f_mode(false)
 {
     head = new int(0);
     recent_d = new QDate[REPEAT];
@@ -43,9 +45,30 @@ void calendar::dropEvent(QDropEvent *event)
     if(choose.isNull())
         return ;
 
+    const QMimeData *mimeData = event->mimeData();
+    if (mimeData->hasUrls()) 
+    {
+        QList<QUrl> urlList = mimeData->urls();
+        for (int i = 0; i < urlList.size(); ++i) 
+        {
+            QString url = urlList.at(i).path();
+            add_file(url,choose);
+            qDebug() << url <<endl;
+        }
+    }
    // addNote(choose);
 
     event->acceptProposedAction();
+}
+
+void calendar::add_file(QString url,const QDate date)
+{
+    qDebug() << url[0] <<endl;
+    if(QFile::copy( url , PATH+/*date.toString()+*/QString("/test") ) == false)
+    {
+        QMessageBox::about(this,tr("File!"),tr("Copy Filed,please check if this file alrealdy exists."));
+        return ;
+    }
 }
 
 QDate calendar::find(QPoint p)

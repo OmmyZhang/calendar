@@ -19,12 +19,12 @@ CalendarWindow::CalendarWindow()
 
     QHBoxLayout *ButtonsLayout = new QHBoxLayout;
     ButtonsLayout ->addWidget(fix);
-    ButtonsLayout ->addWidget(new QLabel(tr("Note Mode")));
+    ButtonsLayout ->addWidget(new QLabel(tr("Notes Mode")));
     ButtonsLayout ->addWidget(sc);
     ButtonsLayout ->addWidget(new QLabel(tr("File Mode")));
 
     QWidget *box = new QWidget;
-    box ->setFixedSize(230,35);
+    box ->setFixedSize(245,35);
     box->setLayout(ButtonsLayout);
 
     QVBoxLayout *Layout = new QVBoxLayout;

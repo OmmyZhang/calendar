@@ -38,7 +38,9 @@ private slots:
     void interseting_repaint();
 
 private:
+    QString PATH;
     QDate find(QPoint);
+    void add_file(QString,const QDate);
 
     bool f_mode;
     QDate *recent_d;
@@ -48,7 +50,7 @@ private:
     QMap<QDate , QString> once_todo;
     QMap<QDate , bool> i_m,i_w,i_d;
     QMap<QDate , QColor*> cell_color;
-        
+    QMap<QDate , QList<QString> > files;
     QString weekly_todo[8];
     QString monthly_todo[32];
     QString daily;

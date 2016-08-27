@@ -3,3 +3,5 @@ moc_*
 *~
 Makefile
 *.pro
+usr_data
+
