@@ -11,7 +11,8 @@ int main(int argc, char *argv[])
 
     CalendarWindow* calew = new CalendarWindow();
     calew->resize(QSize(screenRect.width()*2/3, screenRect.height()*2/3));
-    calew->setWindowOpacity(0.9);
+    calew->setWindowOpacity(0.8);
+    calew->setWindowFlags(Qt::FramelessWindowHint );
     calew->show();
 
 

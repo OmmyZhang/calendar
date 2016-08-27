@@ -23,6 +23,8 @@ calendar::calendar() : PATH("usr_data/"),f_mode(false)
 
     setAcceptDrops(f_mode);
     load();
+    
+	connect(this,SIGNAL(activated(const QDate &)),this,SLOT(addNote(const QDate &)));
 }
 
 calendar::~calendar()
