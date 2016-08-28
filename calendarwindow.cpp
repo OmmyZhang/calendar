@@ -46,6 +46,7 @@ CalendarWindow::CalendarWindow(QRect _sr) : _fixed(false),sr(_sr)
     box->setLayout(ButtonsLayout);
 
     QVBoxLayout *Layout = new QVBoxLayout;
+    Layout ->setContentsMargins(0, 0, 0, 15);
     Layout ->addWidget(box);
     Layout ->addWidget(mainbody);
 

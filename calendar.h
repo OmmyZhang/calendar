@@ -8,7 +8,6 @@
 #include <QPen>
 #include <QBrush>
 #include <QMap>
-#include "setdialog.h"
 #define REPEAT 42
 
 QT_BEGIN_NAMESPACE
@@ -57,8 +56,6 @@ private:
     QString monthly_todo[32];
     QString weekly_todo[8];
     QString daily;
-
-    SetDialog *setwindow;
 
 };
 

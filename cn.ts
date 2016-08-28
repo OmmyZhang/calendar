@@ -4,12 +4,12 @@
 <context>
     <name>CalendarWindow</name>
     <message>
-        <location filename="calendarwindow.cpp" line="34"/>
+        <location filename="calendarwindow.cpp" line="35"/>
         <source>Notes Mode</source>
         <translation>笔记模式</translation>
     </message>
     <message>
-        <location filename="calendarwindow.cpp" line="36"/>
+        <location filename="calendarwindow.cpp" line="37"/>
         <source>File Mode</source>
         <translation>文件模式</translation>
     </message>
@@ -103,57 +103,65 @@
 <context>
     <name>calendar</name>
     <message>
-        <location filename="calendar.cpp" line="70"/>
         <source>waring</source>
-        <translation>警告</translation>
+        <translation type="obsolete">警告</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="70"/>
+        <location filename="calendar.cpp" line="72"/>
         <source>Something wrong.Can&apos;t save.</source>
         <translation>出错了QAQ   无法保存。</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="84"/>
+        <location filename="calendar.cpp" line="72"/>
+        <source>Waring!</source>
+        <translation>警告！</translation>
+    </message>
+    <message>
+        <location filename="calendar.cpp" line="86"/>
         <source>Warning!</source>
         <translation>警告！</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="84"/>
         <source>The document file has be changed.Loading fail.</source>
+        <translation type="obsolete">记录文件被篡改。   读取失败。</translation>
+    </message>
+    <message>
+        <location filename="calendar.cpp" line="86"/>
+        <source>The document file has be changed.Loading failed.</source>
         <translation>记录文件被篡改。   读取失败。</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="140"/>
+        <location filename="calendar.cpp" line="139"/>
         <source>Hello</source>
         <translation>嗨</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="140"/>
+        <location filename="calendar.cpp" line="139"/>
         <source>It seems you are a new user. Enjoy it!</source>
         <translation>看来你是个新用户。好好体验吧！</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="164"/>
+        <location filename="calendar.cpp" line="163"/>
         <source>please drop it in a cell</source>
         <translation>请拖到一个方格里</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="198"/>
+        <location filename="calendar.cpp" line="209"/>
         <source>Fail!</source>
         <translation>失败！</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="198"/>
+        <location filename="calendar.cpp" line="209"/>
         <source>Copying a directory is not allowed.</source>
         <translation>不允许复制文件夹。</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="201"/>
+        <location filename="calendar.cpp" line="212"/>
         <source>Fail to copy </source>
         <translation>无法复制</translation>
     </message>
     <message>
-        <location filename="calendar.cpp" line="201"/>
+        <location filename="calendar.cpp" line="212"/>
         <source>Copying Failed,please check if it is a local file or if it alrealdy exists.</source>
         <translation>复制失败，请检查这是不是一个本地文件或者是不是已经存在了。</translation>
     </message>

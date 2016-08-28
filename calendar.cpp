@@ -1,4 +1,7 @@
 #include "calendar.h"
+
+#include "setdialog.h"
+#include "filesdialog.h"
 #include <QWidget>
 #include <QInputDialog>
 #include <QTextCharFormat>
@@ -9,7 +12,6 @@
 #include <QUrl>
 #include <QDir>
 #include <QMessageBox>
-#include "draglabel.h"
 
 #define DOC "usr_data/.document.zyn"
 #define ST(x) ( (x).length() ? (x) : "<empty>" )
@@ -151,8 +153,8 @@ void calendar::dragEnterEvent(QDragEnterEvent *event)
 
 void calendar::dropEvent(QDropEvent *event)
 {
-    qDebug()<<"drop"<<endl;
-    qDebug()<<event->pos().x()<<" , "<<event ->pos().y()<<endl;
+    //qDebug()<<"drop"<<endl;
+    //qDebug()<<event->pos().x()<<" , "<<event ->pos().y()<<endl;
 
     QDate choose = find(event ->pos());
     qDebug()<< choose <<endl;
@@ -165,6 +167,19 @@ void calendar::dropEvent(QDropEvent *event)
     visit[choose]=true;
 
     const QMimeData *mimeData = event->mimeData();
+    
+    if(mimeData->hasText())
+        qDebug() <<"text:" << mimeData ->text() <<endl;
+    else
+        qDebug() << "No text" <<endl;
+    
+    qDebug() << "form: "  <<endl;
+    for(int i=0;i<mimeData->formats().size();++i)
+    {
+        qDebug() << mimeData->formats() [i] << " []:" << endl;
+        qDebug()<< mimeData->data( mimeData->formats()[i] ) <<endl;
+    }
+
     if (mimeData->hasUrls()) 
     {
         QList<QUrl> urlList = mimeData->urls();
@@ -172,21 +187,20 @@ void calendar::dropEvent(QDropEvent *event)
         {
             QString url = urlList.at(i).path();
             add_file(url,choose);
-            qDebug() << url <<endl;
+            qDebug() << "url:" << url <<endl;
         }
     }
     else
         qDebug()<<"wrong"<<endl;
-   // addNote(choose);
+   qDebug() << "Finished" <<endl;
 
     event->acceptProposedAction();
 }
 
 void calendar::add_file(QString url,const QDate date)
 {
-    qDebug() << url[0] <<endl;
     int p=url.length()-2;
-    while(url[p]!='/') --p;
+    while(p && (url[p]!='/')) --p;
     QString file_name=url.right( url.length() - p );
 
     QDir dir(PATH);
@@ -222,13 +236,19 @@ void calendar::addNote( const QDate &date )
 
     if(f_mode)
     {
-
-        return ;
+        FilesDialog *fileswindow = new FilesDialog(PATH+date.toString(),files[date]);
+        fileswindow ->setMinimumSize(300,300);
+        fileswindow ->setWindowTitle(date.toString());
+        fileswindow->show();
+        
+    }
+    else
+    {
+        SetDialog *setwindow = new SetDialog(once_todo[date],monthly_todo[date.day()],weekly_todo[date.dayOfWeek()],daily,i_m[date] , i_w[date] , i_d[date],cell_color[date]);
+        connect(setwindow,SIGNAL(repaint_the_calendar()),this,SLOT(interseting_repaint()));
+        setwindow->exec();
     }
 
-    setwindow = new SetDialog(once_todo[date],monthly_todo[date.day()],weekly_todo[date.dayOfWeek()],daily,i_m[date] , i_w[date] , i_d[date],cell_color[date]);
-    connect(setwindow,SIGNAL(repaint_the_calendar()),this,SLOT(interseting_repaint()));
-    setwindow->exec();
 }
 
 
@@ -288,7 +308,10 @@ void calendar::paintCell(QPainter *painter, const QRect &rect, const QDate &date
         painter->setFont(font);
         all=QString("");
         for(int i=0 ; i < files[date].size() ; ++i )
-            all+=files[date][i].right(files[date][i].length()-1)  +_n;
+        {
+        	if(QFile::exists( PATH + date.toString() + files[date][i] ) )
+            	all+=files[date][i].right(files[date][i].length()-1)  +_n;
+        }
         painter->drawText(rect,all);
     }
     else
