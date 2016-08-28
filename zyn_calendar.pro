@@ -9,6 +9,8 @@ INCLUDEPATH += .
 
 LIBS += -lX11 -lXext
 
+TRANSLATIONS += zyn.ts
+
 # Input
 HEADERS += calendar.h \
            calendarwindow.h \

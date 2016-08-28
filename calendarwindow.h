@@ -13,13 +13,14 @@ class CalendarWindow : public QWidget
     Q_OBJECT
 
 public:
-        CalendarWindow();
+        CalendarWindow(QRect);
 private:
         calendar* mainbody;
-        QPushButton *fix;
+        QPushButton *clo,*fix;
         SwitchControl *sc;
         XRectangle *myrect;
         bool _fixed;
+        QRect sr;
 private slots:
         void fixed();
 

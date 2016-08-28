@@ -67,7 +67,7 @@ void calendar::save()
         doc.close();
     }
     else
-        QMessageBox::warning(this,tr("waring"),tr("Something wrong.Can't save."));
+        QMessageBox::warning(this,tr("Waring!"),tr("Something wrong.Can't save."));
 }
 
 void calendar::load()
@@ -78,10 +78,10 @@ void calendar::load()
         QTextStream ip(&doc);
         int y,m,d;
         QString s = ip.readLine();
-        qDebug() << s << endl;
+
         if(s != QString("Start saving. Key:xfgcfhjknbvcr567ugbhnjkmo75rdtcfgvhjvc54trdfctt6tgfgy6ygy7ygygft5rf3ghvjbBNUI8uy7uh98uygbhj887ygg7ygt65rdrtt"))
         {
-        	QMessageBox::warning(this,tr("Warning!"),tr("The document file has be changed.Loading fail."));
+        	QMessageBox::warning(this,tr("Warning!"),tr("The document file has be changed.Loading failed."));
         	return ;
         }
      
@@ -106,12 +106,9 @@ void calendar::load()
             
         	ip >> y >> m >> d; s = ip.readLine();
             QDate date(y,m,d); visit[date]=true;
-            qDebug() << date.toString() << endl;
             
             s = ip.readLine();
             once_todo[date]=TS(s);
-
-            qDebug() << s << endl;
 
             int im,iw,id;
             ip >> im >> iw >> id;
