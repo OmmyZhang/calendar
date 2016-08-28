@@ -10,7 +10,8 @@
 FileWidget::FileWidget(const QString _url , const QString& f_name):url(_url)
 {
     QHBoxLayout *Layout = new QHBoxLayout;
-    
+    Layout ->setContentsMargins(0,0,0,0);
+
     QLabel *file_p = new QLabel;
     file_p ->setPixmap(QPixmap("pic/file.png"));
     Layout->addWidget(file_p);

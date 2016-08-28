@@ -237,7 +237,7 @@ void calendar::addNote( const QDate &date )
     if(f_mode)
     {
         FilesDialog *fileswindow = new FilesDialog(PATH+date.toString(),files[date]);
-        fileswindow ->setMinimumSize(300,300);
+        fileswindow ->setMinimumSize(390,390);
         fileswindow ->setWindowTitle(date.toString());
         fileswindow->show();
         
